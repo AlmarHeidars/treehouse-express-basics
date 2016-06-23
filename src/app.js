@@ -1,18 +1,26 @@
 'use strict';
 
 var express = require('express'),
-var posts = require('./mock/posts.json');
+    posts = require('./mock/posts.json');
 
 var app = express();
 
-debugger;
+app.set('vie engine', 'jade');
+app.set('views', __dirname + './templates');
 
 app.get('/', function(req, res){
-    res.send("<h1>I Love Treehouse!</h1>");
+    res.render('index');
 });
 
-app.get('/blog', function (req, res){
-    res.send(posts);
+app.get('/blog:title?', function (req, res){
+    var title = req.param.title;
+    if (title === undefined) {
+        res.status(503);
+        res.send("This page is under construction!")
+    } else {
+    var post = posts[title] || {};
+    res.render('post', {post: post});
+    }
 });
 
 app.listen(3000, function (){
